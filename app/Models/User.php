@@ -36,4 +36,11 @@ CanResetPasswordContract
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    // 使用 Gravatar 来为用户提供个人头像支持
+    public function gravatar($size = '100')
+    {
+        $hash = md5(strtolower(trim($this->attributes['email'])));
+        return "http://www.gravatar.com/avatar/$hash?s=$size";
+    }
 }
