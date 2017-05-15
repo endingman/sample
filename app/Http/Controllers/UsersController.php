@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 use Mail;
 
@@ -45,12 +46,11 @@ class UsersController extends Controller
             'email'    => $request->email,
             'password' => bcrypt($request->password),
         ]);
-        // Auth::login($user); //laravel自带自动登录
-        // 发送邮件
-        $this->sendEmailConfirmationTo($user);
 
-        session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
-        return redirect()->route('users.show', [$user]);
+        $this->sendEmailConfirmationTo($user);
+        session()->flash('success', '验证邮件已发送到你的注册邮箱上，请注意查收。');
+        return redirect('/');
+
     }
 
     public function edit($id)
@@ -119,6 +119,7 @@ class UsersController extends Controller
 
         Auth::login($user);
         session()->flash('success', '恭喜你，激活成功！');
+
         return redirect()->route('users.show', [$user]);
     }
 
