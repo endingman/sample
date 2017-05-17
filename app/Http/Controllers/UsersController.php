@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Statuses;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -30,8 +31,11 @@ class UsersController extends Controller
 
     public function show($id)
     {
-        $user = User::findOrFail($id);
-        return view('users.show', compact('user'));
+        $user     = User::findOrFail($id);
+        $statuses = $user->statuses()
+            ->orderBy('created_at', 'desc')
+            ->paginate(30);
+        return view('users.show', compact('user', 'statuses'));
     }
 
     public function store(Request $request)

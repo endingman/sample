@@ -52,4 +52,15 @@ CanResetPasswordContract
         $hash = md5(strtolower(trim($this->attributes['email'])));
         return "http://www.gravatar.com/avatar/$hash?s=$size";
     }
+
+    public function statuses()
+    {
+        return $this->hasmany(Status::class);
+    }
+
+    public function feed()
+    {
+        return $this->statuses()
+            ->orderBy('created_at', 'desc');
+    }
 }
