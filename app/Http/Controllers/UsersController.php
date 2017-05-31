@@ -15,7 +15,7 @@ class UsersController extends Controller
     public function __construct($value = '')
     {
         $this->middleware('auth', [
-            'only' => ['edit', 'update', 'destroy'],
+            'only' => ['edit', 'update', 'destroy', 'followings', 'followers'],
         ]);
 
         $this->middleware('guest', [
@@ -125,6 +125,22 @@ class UsersController extends Controller
         session()->flash('success', '恭喜你，激活成功！');
 
         return redirect()->route('users.show', [$user]);
+    }
+
+    public function followings($id)
+    {
+        $user  = User::findOrFail($id);
+        $users = $user->followings()->paginate(30);
+        $title = '关注的人';
+        return view('users.show_follow', compact('users', 'title'));
+    }
+
+    public function followers($id)
+    {
+        $user  = User::findOrFail($id);
+        $users = $user->followers()->paginate(30);
+        $title = '粉丝';
+        return view('users.show_follow', compact('users', 'title'));
     }
 
 }
